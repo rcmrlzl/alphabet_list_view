@@ -74,39 +74,36 @@ class _AlphabetListViewState extends State<AlphabetListView> {
 
   @override
   Widget build(BuildContext context) {
-    final rowTextDirection =
-        switch (widget.options.scrollbarOptions.forcePosition) {
-          AlphabetScrollbarPosition.left => TextDirection.rtl,
-          AlphabetScrollbarPosition.right => TextDirection.ltr,
-          _ => null,
-        };
+    final scrollbarPosition =
+        widget.options.scrollbarOptions.forcePosition ??
+        (Directionality.of(context) == TextDirection.rtl
+            ? AlphabetScrollbarPosition.left
+            : AlphabetScrollbarPosition.right);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      textDirection: rowTextDirection,
+    return Stack(
       children: [
-        Expanded(
-          child: Stack(
-            children: [
-              AlphabetList(
-                items: _sortedItems,
-                scrollController: _scrollController,
-                alphabetListOptions: widget.options.listOptions,
-                symbolChangeNotifierList: _symbolChangeNotifierList,
-                symbolChangeNotifierScrollbar: _symbolChangeNotifierScrollbar,
-              ),
-              AlphabetSymbolOverlay(
-                alphabetOverlayOptions: widget.options.overlayOptions,
-                symbolChangeNotifierScrollbar: _symbolChangeNotifierScrollbar,
-              ),
-            ],
-          ),
-        ),
-        AlphabetScrollbar(
+        AlphabetList(
           items: _sortedItems,
-          alphabetScrollbarOptions: widget.options.scrollbarOptions,
-          symbolChangeNotifierScrollbar: _symbolChangeNotifierScrollbar,
+          scrollController: _scrollController,
+          alphabetListOptions: widget.options.listOptions,
           symbolChangeNotifierList: _symbolChangeNotifierList,
+          symbolChangeNotifierScrollbar: _symbolChangeNotifierScrollbar,
+        ),
+        AlphabetSymbolOverlay(
+          alphabetOverlayOptions: widget.options.overlayOptions,
+          symbolChangeNotifierScrollbar: _symbolChangeNotifierScrollbar,
+        ),
+        Positioned(
+          top: 0,
+          bottom: 0,
+          right: scrollbarPosition == AlphabetScrollbarPosition.right ? 0 : null,
+          left: scrollbarPosition == AlphabetScrollbarPosition.left ? 0 : null,
+          child: AlphabetScrollbar(
+            items: _sortedItems,
+            alphabetScrollbarOptions: widget.options.scrollbarOptions,
+            symbolChangeNotifierScrollbar: _symbolChangeNotifierScrollbar,
+            symbolChangeNotifierList: _symbolChangeNotifierList,
+          ),
         ),
       ],
     );
