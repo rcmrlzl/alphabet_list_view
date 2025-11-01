@@ -96,8 +96,8 @@ class _AlphabetListViewState extends State<AlphabetListView> {
         Positioned(
           top: 0,
           bottom: 0,
-          right: scrollbarPosition == AlphabetScrollbarPosition.right ? 0 : null,
-          left: scrollbarPosition == AlphabetScrollbarPosition.left ? 0 : null,
+          right: widget.options.scrollbarOptions.forcePosition == AlphabetScrollbarPosition.right ? 0 : null,
+          left: widget.options.scrollbarOptions.forcePosition == AlphabetScrollbarPosition.left ? 0 : null,
           child: AlphabetScrollbar(
             items: _sortedItems,
             alphabetScrollbarOptions: widget.options.scrollbarOptions,
